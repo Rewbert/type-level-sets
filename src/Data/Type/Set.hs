@@ -16,7 +16,7 @@ import Data.Type.Equality
 data Proxy (p :: k) = Proxy
 
 -- Value-level 'Set' representation,  essentially a list
-data Set (n :: [k]) :: * where
+data Set (n :: [*]) :: * where
     {--| Construct an empty set -}
     Empty :: Set '[]
     {--| Extend a set with an element -}
@@ -89,7 +89,7 @@ instance Remove '[] t where
 instance {-# OVERLAPS #-} Remove (x ': xs) x where
   remove (Ext _ xs) Proxy = xs
 
-instance {-# OVERLAPPABLE #-} (((y : xs) :\ x) ~ (y : (xs :\ x)), Remove xs x)
+instance {-# OVERLAPPABLE #-} (((y ': xs) :\ x) ~ (y ': (xs :\ x)), Remove xs x)
       => Remove (y ': xs) x where
   remove (Ext y xs) (x@Proxy) = Ext y (remove xs x)
 
